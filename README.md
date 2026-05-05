@@ -1,6 +1,6 @@
 # Video & Audio Transcription in Claude Code
 
-A step-by-step guide to setting up local video and audio transcription using the Video Input skill and whisper.cpp in Claude Code.
+A step-by-step guide to setting up local video and audio transcription using the Video Input skill and whisper.cpp in Claude Code. (I have used this skill to convert instruction video to step by step guide document)
 
 ---
 

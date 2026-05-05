@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Video Transcriber</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Video & Audio Transcriber</h1>
+    <p class="subtitle">Upload a video or audio file to get a full transcription and analysis.</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert">
+          {% for msg in messages %}<p>{{ msg }}</p>{% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <div class="drop-zone" id="dropZone">
+        <p>Drag & drop your file here or click to browse</p>
+        <p class="hint">Supported: mp4, mov, avi, mkv, webm, mp3, wav, m4a &nbsp;|&nbsp; Max: 500 MB</p>
+        <input type="file" id="fileInput" name="file" accept=".mp4,.mov,.avi,.mkv,.webm,.mp3,.wav,.m4a" hidden>
+        <span id="fileName" class="file-name"></span>
+      </div>
+
+      <div class="options">
+        <div class="option-group">
+          <label for="fps">Frame Rate (fps)</label>
+          <select name="fps" id="fps">
+            <option value="1" selected>1 fps (recommended)</option>
+            <option value="2">2 fps</option>
+            <option value="0.5">0.5 fps</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label for="model">Whisper Model</label>
+          <select name="model" id="model">
+            <option value="base" selected>Base (fast)</option>
+            <option value="small">Small (balanced)</option>
+            <option value="medium">Medium (accurate)</option>
+            <option value="large">Large (best accuracy)</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Transcribe & Analyze</button>
+    </form>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const submitBtn = document.getElementById('submitBtn');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      fileInput.files = e.dataTransfer.files;
+      fileName.textContent = fileInput.files[0]?.name || '';
+    });
+
+    fileInput.addEventListener('change', () => {
+      fileName.textContent = fileInput.files[0]?.name || '';
+    });
+
+    document.querySelector('form').addEventListener('submit', () => {
+      submitBtn.textContent = 'Processing... this may take a moment';
+      submitBtn.disabled = true;
+    });
+  </script>
+</body>
+</html>

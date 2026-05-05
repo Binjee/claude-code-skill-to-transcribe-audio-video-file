@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Results – Video Transcriber</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Transcription Results</h1>
+    <p class="subtitle">File: <strong>{{ filename }}</strong></p>
+
+    <div class="actions">
+      <a href="/" class="btn btn-secondary">Upload Another</a>
+      <a href="/download?dir={{ analysis_dir }}&type=transcription" class="btn">Download .srt</a>
+      <a href="/download?dir={{ analysis_dir }}&type=analysis" class="btn">Download Analysis</a>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('transcription')">Transcription</button>
+      <button class="tab" onclick="showTab('analysis')">Analysis</button>
+    </div>
+
+    <div id="transcription" class="tab-content active">
+      <div class="copy-bar">
+        <span>Full Transcription</span>
+        <button onclick="copyText('transcriptionText')">Copy</button>
+      </div>
+      <pre id="transcriptionText">{{ transcription }}</pre>
+    </div>
+
+    <div id="analysis" class="tab-content">
+      <div class="copy-bar">
+        <span>Analysis Summary</span>
+        <button onclick="copyText('analysisText')">Copy</button>
+      </div>
+      <pre id="analysisText">{{ analysis }}</pre>
+    </div>
+  </div>
+
+  <script>
+    function showTab(name) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      document.getElementById(name).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function copyText(id) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+    }
+  </script>
+</body>
+</html>
